@@ -28,6 +28,7 @@ class DaftarController extends Controller
             'kata_sandi' => ['required', 'min:6', 'confirmed'],
             'id_departemen' => ['required', 'integer'],
             'id_jabatan' => ['required', 'integer'],
+            'jenis_kelamin' => ['required', 'in:L,P'],
         ]);
 
         Pengguna::create([
@@ -39,6 +40,7 @@ class DaftarController extends Controller
             'status_aktif' => 1,
             'id_departemen' => $request->id_departemen,
             'id_jabatan' => $request->id_jabatan,
+            'jenis_kelamin' => $request->jenis_kelamin,
         ]);
 
         return redirect()->route('masuk')->with('success', 'Pendaftaran berhasil. Silakan masuk.');

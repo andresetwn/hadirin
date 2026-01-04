@@ -44,4 +44,17 @@ class Pengguna extends Authenticatable
     {
         return $this->belongsTo(\App\Models\Departemen::class, 'id_departemen');
     }
+    
+    public function getJenisKelaminLabelAttribute()
+    {
+        if ($this->jenis_kelamin === 'L') {
+            return 'Laki-laki';
+        }
+
+        if ($this->jenis_kelamin === 'P') {
+            return 'Perempuan';
+        }
+
+        return '-';
+    }
 }

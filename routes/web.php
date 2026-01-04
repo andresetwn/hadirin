@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\MasukController;
 use App\Http\Controllers\Auth\DaftarController;
 use App\Http\Controllers\Karyawan\AbsensiController;
-
+use App\Http\Controllers\PengajuanCutiController;
+use App\Http\Controllers\RiwayatController;
 /*
 |--------------------------------------------------------------------------
 | ROOT
@@ -50,14 +51,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/absensi/masuk', [AbsensiController::class, 'masuk'])->name('absensi.masuk');
     Route::post('/absensi/pulang', [AbsensiController::class, 'pulang'])->name('absensi.pulang');
 
-    // Placeholder sementara (kalau view sudah ada boleh aktifkan)
-    Route::get('/cuti', function () {
-        return view('cuti.index');
-    })->name('cuti');
+    // Pengajuan cuti (ambil jenis cuti dari DB + simpan ke DB)
+    Route::middleware('auth')->group(function () {
+        Route::get('/pengajuan', [PengajuanCutiController::class, 'create'])->name('pengajuan');
+        Route::post('/pengajuan', [PengajuanCutiController::class, 'store'])->name('cuti.store');
+    });
 
-    Route::get('/riwayat', function () {
-        return view('riwayat.index');
-    })->name('riwayat');
+    Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
 });
 
 /*
