@@ -137,9 +137,6 @@ class AbsensiController extends Controller
             return back()->withErrors(['absensi' => 'Anda sudah absen pulang hari ini.']);
         }
 
-        // Optional: kalau kamu mau, validasi pulang juga harus dalam jam shift.
-        // Saat ini saya biarkan bebas agar tidak menghambat.
-
         DB::table('absensi')
             ->where('id', $absenHariIni->id)
             ->update([

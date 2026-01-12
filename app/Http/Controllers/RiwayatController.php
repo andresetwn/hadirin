@@ -25,7 +25,7 @@ class RiwayatController extends Controller
         if ($q !== '') {
             $absensi->where(function ($s) use ($q) {
                 $s->where('status', 'like', '%' . $q . '%')
-                    ->orWhere('keterangan', 'like', '%' . $q . '%');
+                    ->orWhere('status', 'like', '%' . $q . '%');
             });
         }
 
@@ -39,7 +39,7 @@ class RiwayatController extends Controller
                 'pulang' => ($a->waktu_pulang && $a->waktu_pulang != '0000-00-00 00:00:00')
                     ? \Carbon\Carbon::parse($a->waktu_pulang)->format('H:i')
                     : '-',
-                'keterangan' => strtoupper($a->status ?? 'HADIR'),
+                'status' => strtoupper($a->status ?? 'HADIR'),
             ];
         });
 
@@ -60,7 +60,7 @@ class RiwayatController extends Controller
                         'tanggal' => $d->format('Y-m-d'),
                         'masuk' => '00.00',
                         'pulang' => '00.00',
-                        'keterangan' => 'CUTI',
+                        'status' => 'CUTI',
                     ];
                 }
 
@@ -73,7 +73,7 @@ class RiwayatController extends Controller
             ->concat($cuti)
             ->groupBy('tanggal')
             ->map(function ($items) {
-                $cutiItem = $items->firstWhere('keterangan', 'CUTI');
+                $cutiItem = $items->firstWhere('status', 'CUTI');
                 return $cutiItem ? $cutiItem : $items->first();
             })
             ->values()

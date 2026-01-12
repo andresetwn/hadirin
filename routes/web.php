@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\DaftarController;
 use App\Http\Controllers\Karyawan\AbsensiController;
 use App\Http\Controllers\PengajuanCutiController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\Admin\RiwayatAbsensiAdminController;
 /*
 |--------------------------------------------------------------------------
 | ROOT
@@ -66,6 +67,22 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 | 
 */
-Route::get('/admin', function () {
-    return 'Dashboard Admin';
-})->middleware('auth')->name('admin');
+Route::get(
+    '/admin',
+    function () {
+        if (Auth::check()) {
+            return redirect()->route('admin.riwayat_absensi');
+        }
+        return redirect()->route('masuk');
+    }
+);
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(
+    function () {
+        Route::get('/riwayat-absensi', [RiwayatAbsensiAdminController::class, 'index'])->name('riwayat_absensi');
+        Route::get('/riwayat-absensi/export', [RiwayatAbsensiAdminController::class, 'exportCsv'])->name('riwayat_absensi.export');
+        // AKSI
+        Route::get('/riwayat-absensi/{id}/detail', [RiwayatAbsensiAdminController::class, 'show'])->name('riwayat_absensi.show');
+        Route::put('/riwayat-absensi/{id}', [RiwayatAbsensiAdminController::class, 'update'])->name('riwayat_absensi.update');
+        Route::delete('/riwayat-absensi/{id}', [RiwayatAbsensiAdminController::class, 'destroy'])->name('riwayat_absensi.destroy');
+    }
+);
