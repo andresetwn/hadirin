@@ -33,8 +33,18 @@ class PengajuanCuti extends Model
         'disetujui_pada' => 'datetime',
     ];
 
-    public function jenisCuti()
+    public function jenis_cuti()
     {
         return $this->belongsTo(JenisCuti::class, 'id_jenis_cuti');
+    }
+
+    public function pengguna()
+    {
+        return $this->belongsTo(Pengguna::class, 'id_pengguna');
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(Pengguna::class, 'disetujui_oleh');
     }
 }

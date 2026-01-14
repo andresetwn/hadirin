@@ -58,7 +58,7 @@
 
                     {{-- MENU: KARYAWAN --}}
                     <a
-                        href="#"
+                        href="{{ route('admin.karyawan.index') }}"
                         class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200"
                     >
                         <svg
@@ -80,7 +80,7 @@
 
                     {{-- MENU: PENGAJUAN --}}
                     <a
-                        href="#"
+                        href="{{ route('admin.pengajuan.index') }}"
                         class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200"
                     >
                         <svg
@@ -102,7 +102,7 @@
 
                     {{-- MENU: PENGATURAN --}}
                     <a
-                        href="#"
+                        href="route('admin.pengaturan')"
                         class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200"
                     >
                         <svg
