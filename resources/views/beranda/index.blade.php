@@ -2,14 +2,14 @@
 @extends('layouts.app')
 
 @section('title', 'Beranda')
-@section('header_title', 'HOME')
+@section('header_title', 'BERANDA')
 
 @section('content')
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-10 min-h-[500px]">
 
         {{-- Greeting --}}
         <div class="mb-10">
-            <h2 class="text-xl font-bold text-gray-400">Hallo,</h2>
+            <h2 class="text-xl font-bold text-gray-400">Halo,</h2>
 
             <h3 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mt-1">
                 {{ Auth::user()->nama_lengkap }}

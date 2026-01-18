@@ -4,7 +4,7 @@
     class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-10 relative min-h-[550px]"
 >
     <form
-        action="{{ route('cuti.store') }}"
+        action="{{ route('pengajuan.store') }}"
         method="POST"
         enctype="multipart/form-data"
         class="max-w-4xl"

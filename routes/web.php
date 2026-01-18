@@ -2,20 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
-// Controller Auth
 use App\Http\Controllers\Auth\MasukController;
 use App\Http\Controllers\Auth\DaftarController;
-
-// Controller Karyawan / Umum
 use App\Http\Controllers\Karyawan\AbsensiController;
 use App\Http\Controllers\RiwayatController;
-use App\Http\Controllers\PermohonanCutiController; // Controller User (Input Form)
-
-// Controller Admin
+use App\Http\Controllers\PermohonanCutiController;
 use App\Http\Controllers\Admin\RiwayatAbsensiAdminController;
 use App\Http\Controllers\Admin\KaryawanController;
-use App\Http\Controllers\Admin\PengajuanCutiController; // Controller Admin (Approval)
+use App\Http\Controllers\Admin\PengajuanCutiController;
+use App\Http\Controllers\Admin\PengaturanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,7 +57,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/absensi/pulang', [AbsensiController::class, 'pulang'])->name('absensi.pulang');
 
     // --- PENGAJUAN CUTI (Sisi Karyawan) ---
-    // Menggunakan PermohonanCutiController
     Route::get('/pengajuan', [PermohonanCutiController::class, 'create'])->name('pengajuan');
     Route::post('/pengajuan', [PermohonanCutiController::class, 'store'])->name('pengajuan.store');
 
@@ -72,19 +66,15 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN PANEL
+| ADMIN
 |--------------------------------------------------------------------------
 */
-// Redirect /admin ke halaman yang benar
 Route::get('/admin', function () {
     if (Auth::check()) {
-        // Pastikan user punya akses admin (bisa tambah cek role di sini jika perlu)
         return redirect()->route('admin.riwayat_absensi');
     }
     return redirect()->route('masuk');
 });
-
-// Group Route Admin
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // 1. RIWAYAT ABSENSI
@@ -93,13 +83,16 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/riwayat-absensi/{id}/detail', [RiwayatAbsensiAdminController::class, 'show'])->name('riwayat_absensi.show');
     Route::put('/riwayat-absensi/{id}', [RiwayatAbsensiAdminController::class, 'update'])->name('riwayat_absensi.update');
     Route::delete('/riwayat-absensi/{id}', [RiwayatAbsensiAdminController::class, 'destroy'])->name('riwayat_absensi.destroy');
-
     // 2. MANAJEMEN KARYAWAN
     Route::resource('karyawan', KaryawanController::class)->except(['show']);
 
-    // 3. PERSETUJUAN CUTI (Sisi Admin)
-    // Menggunakan PengajuanCutiController (Namespace Admin)
+    // 3. PERSETUJUAN CUTI
     Route::get('/pengajuan', [PengajuanCutiController::class, 'index'])->name('pengajuan.index');
     Route::get('/pengajuan/{id}', [PengajuanCutiController::class, 'show'])->name('pengajuan.show');
     Route::put('/pengajuan/{id}', [PengajuanCutiController::class, 'updateStatus'])->name('pengajuan.update');
+
+    // --- PENGATURAN  ---
+    Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::put('/pengaturan/profil', [PengaturanController::class, 'updateProfile'])->name('pengaturan.update_profile');
+    Route::put('/pengaturan/password', [PengaturanController::class, 'updatePassword'])->name('pengaturan.update_password');
 });

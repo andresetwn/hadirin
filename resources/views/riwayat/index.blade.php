@@ -73,23 +73,62 @@
 {{-- LIST DATA RIWAYAT --}}
 <div class="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
 
-    @forelse ($dataRiwayat as $row)
+   @forelse ($dataRiwayat as $row)
         <div class="border border-gray-400 rounded-lg p-4 grid grid-cols-1 md:grid-cols-4 items-center gap-2 md:gap-4 text-center hover:bg-gray-50 transition shadow-sm">
+            {{-- 1. TANGGAL --}}
             <div class="md:text-left font-bold text-gray-700 pl-2">
                 {{ \Carbon\Carbon::parse($row['tanggal'])->format('d-m-Y') }}
             </div>
 
+            {{-- 2. JAM MASUK --}}
             <div class="flex justify-between md:block px-4 md:px-0">
                 <span class="md:hidden text-gray-400 text-xs">Masuk:</span>
                 <span class="font-bold text-gray-800">{{ $row['masuk'] }}</span>
             </div>
 
+            {{-- 3. JAM PULANG --}}
             <div class="flex justify-between md:block px-4 md:px-0">
                 <span class="md:hidden text-gray-400 text-xs">Pulang:</span>
                 <span class="font-bold text-gray-800">{{ $row['pulang'] }}</span>
             </div>
 
-            <div class="font-bold text-gray-800">{{ $row['keterangan'] }}</div>
+            {{-- 4. STATUS / KETERANGAN (YANG KITA MODIFIKASI) --}}
+            <div class="font-bold text-gray-800 flex flex-col items-center md:items-center justify-center">
+                @php
+                    // Ubah status jadi huruf kecil agar mudah dicek
+                    $statusLower = strtolower($row['status']);
+                @endphp
+
+                @if(str_contains($statusLower, 'ditolak'))
+                    {{-- STATUS DITOLAK (MERAH) --}}
+                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        {{ $row['status'] }}
+                    </span>
+                    
+                    {{-- Cek jika ada catatan (pastikan Controller mengirim data 'catatan') --}}
+                    @if(isset($row['catatan']) && !empty($row['catatan']))
+                        <span class="text-[10px] text-red-500 mt-1 italic leading-tight max-w-[150px]">
+                            Note: {{ $row['catatan'] }}
+                        </span>
+                    @endif
+
+                @elseif(str_contains($statusLower, 'disetujui'))
+                    {{-- STATUS DISETUJUI (HIJAU) --}}
+                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        {{ $row['status'] }}
+                    </span>
+
+                @elseif(str_contains($statusLower, 'menunggu'))
+                    {{-- STATUS MENUNGGU (KUNING) --}}
+                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        {{ $row['status'] }}
+                    </span>
+
+                @else
+                    {{-- STATUS BIASA (HADIR/TERLAMBAT) --}}
+                    {{ $row['status'] }}
+                @endif
+            </div>
         </div>
     @empty
         <div class="border border-gray-300 rounded-lg p-6 text-center text-gray-500 font-bold">

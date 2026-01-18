@@ -12,10 +12,7 @@ class KaryawanController extends Controller
 {
     public function index(Request $request)
     {
-        // Query data karyawan (bukan admin)
         $query = Pengguna::with(['jabatan', 'departemen']); 
-
-        // Fitur Pencarian
         if ($request->has('q') && $request->q != '') {
             $search = $request->q;
             $query->where(function($q) use ($search) {
@@ -51,8 +48,8 @@ class KaryawanController extends Controller
             'nip' => $request->nip,
             'nama_lengkap' => $request->nama_lengkap,
             'email' => $request->email,
-            'kata_sandi' => Hash::make($request->kata_sandi), // Hash password
-            'jenis_kelamin' => $request->jenis_kelamin, // 'L' atau 'P'
+            'kata_sandi' => Hash::make($request->kata_sandi),
+            'jenis_kelamin' => $request->jenis_kelamin,
             'id_jabatan' => $request->id_jabatan,
             'id_departemen' => $request->id_departemen,
             'role' => 'karyawan',
@@ -79,8 +76,6 @@ class KaryawanController extends Controller
             'email' => 'required|email|unique:pengguna,email,'.$id,
             'jenis_kelamin' => 'required|in:L,P',
         ]);
-
-        // Siapkan data update
         $data = [
             'nip' => $request->nip,
             'nama_lengkap' => $request->nama_lengkap,
@@ -89,8 +84,6 @@ class KaryawanController extends Controller
             'id_jabatan' => $request->id_jabatan,
             'id_departemen' => $request->id_departemen,
         ];
-
-        // Jika password diisi, update password baru
         if($request->filled('kata_sandi')) {
             $data['kata_sandi'] = Hash::make($request->kata_sandi);
         }

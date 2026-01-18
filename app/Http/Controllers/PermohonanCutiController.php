@@ -53,8 +53,6 @@ class PermohonanCutiController extends Controller
                 'lampiran' => 'Jenis cuti ini wajib lampiran.'
             ])->withInput();
         }
-
-        // simpan file (WAJIB)
         $lampiranPath = $request->file('lampiran')->store('lampiran_cuti', 'public');
 
         PengajuanCuti::create([

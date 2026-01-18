@@ -57,24 +57,13 @@ class AbsensiController extends Controller
         if (!$shift) {
             return back()->withErrors(['id_jam_kerja' => 'Shift tidak valid atau tidak aktif.'])->withInput();
         }
-
-        // =========================================================
-        // VALIDASI: tidak boleh absen di luar jam kerja shift
-        // - boleh masuk mulai dari jam_masuk sampai jam_pulang
-        // - kalau kamu mau pakai toleransi sebagai "batas telat", tetap bisa
-        // =========================================================
-        $jamMasukShift = $shift->jam_masuk;   // TIME
-        $jamPulangShift = $shift->jam_pulang; // TIME
-
+        $jamMasukShift = $shift->jam_masuk;
+        $jamPulangShift = $shift->jam_pulang;
         $now = now();
-
         $startWindow = \Carbon\Carbon::parse($now->toDateString() . ' ' . $jamMasukShift);
         $endWindow = \Carbon\Carbon::parse($now->toDateString() . ' ' . $jamPulangShift);
-
-        // kalau shift melewati tengah malam (contoh 23:00 - 07:00)
         if ($endWindow->lessThan($startWindow)) {
             $endWindow->addDay();
-            // jika sekarang masih sebelum jam masuk (misal jam 01:00), berarti masuk di hari berikutnya
             if ($now->lessThan($startWindow)) {
                 $startWindow->subDay();
                 $endWindow->subDay();
@@ -86,15 +75,8 @@ class AbsensiController extends Controller
                 'absensi' => 'Tidak dapat absen di luar jam kerja. Jam shift Anda: ' . substr($jamMasukShift, 0, 5) . ' - ' . substr($jamPulangShift, 0, 5) . '.'
             ])->withInput();
         }
-
-        // =========================================================
-        // HITUNG STATUS HADIR / TERLAMBAT
-        // - terlambat jika lewat jam_masuk + toleransi_menit
-        // =========================================================
         $toleransi = (int)($shift->toleransi_menit ?? 0);
         $batasMasuk = \Carbon\Carbon::parse($now->toDateString() . ' ' . $jamMasukShift)->addMinutes($toleransi);
-
-        // handle shift lewat tengah malam untuk batasMasuk
         if ($batasMasuk->lessThan($startWindow)) {
             $batasMasuk = $startWindow->copy()->addMinutes($toleransi);
         }

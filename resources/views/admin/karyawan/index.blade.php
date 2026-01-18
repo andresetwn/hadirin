@@ -32,6 +32,7 @@
                     <th class="px-6 py-4">NIP</th>
                     <th class="px-6 py-4">Nama</th>
                     <th class="px-6 py-4">Jabatan</th>
+                    <th class="px-6 py-4">Departemen</th>
                     <th class="px-6 py-4">Email</th>
                     <th class="px-6 py-4 text-center">Aksi</th>
                 </tr>
@@ -66,6 +67,11 @@
                     {{-- Jabatan --}}
                     <td class="px-6 py-4">
                         {{ $k->jabatan->nama_jabatan ?? '-' }}
+                    </td>
+
+                    {{-- Departemen --}}
+                    <td class="px-6 py-4">
+                        {{ $k->departemen->nama_departemen ?? '-' }}
                     </td>
 
                     {{-- Email --}}

@@ -37,48 +37,30 @@ class RiwayatAbsensiAdminController extends Controller
         $q = trim((string)$request->get('q', ''));
         $start = now()->startOfMonth()->toDateString();
         $end = now()->endOfMonth()->toDateString();
-
-        // Filter Rentang Tanggal
         if ($range !== '') {
-            // Cek apakah menggunakan pemisah " to " (dari Flatpickr)
             if (str_contains($range, ' sampai ')) {
                 $parts = explode(' sampai ', $range);
-                $start = trim($parts[0]); // Ambil tanggal awal
-                $end   = trim($parts[1] ?? $start); // Ambil tanggal akhir
+                $start = trim($parts[0]);
+                $end   = trim($parts[1] ?? $start);
             }
-            // Fallback: Jika masih menggunakan format lama "-" tapi tanggalnya format Y/m/d (slash)
             elseif (str_contains($range, ' - ')) {
                 $parts = explode(' - ', $range);
                 $start = trim($parts[0]);
                 $end   = trim($parts[1] ?? $start);
             }
-            // Jika format Y-m-d tunggal (satu hari)
             else {
                 $start = $range;
                 $end   = $range;
             }
-
-            // Validasi tanggal dengan Carbon
             try {
                 $start = Carbon::parse($start)->startOfDay()->toDateString();
                 $end   = Carbon::parse($end)->endOfDay()->toDateString();
             } catch (\Exception $e) {
-                // Jika error, reset ke bulan ini
                 $start = now()->startOfMonth()->toDateString();
                 $end   = now()->endOfMonth()->toDateString();
             }
         }
-
-        // Dropdown departemen
         $departemenList = DB::table('departemen')->orderBy('id', 'asc')->get();
-
-        // =========================
-        // ABSENSI: join pengguna + departemen
-        // SESUAIKAN nama kolom pengguna jika berbeda:
-        // - pengguna.nama
-        // - pengguna.nip
-        // - pengguna.id_departemen
-        // =========================
         $absensiQuery = DB::table('absensi')
             ->join('pengguna', 'pengguna.id', '=', 'absensi.id_pengguna')
             ->leftJoin('departemen', 'departemen.id', '=', 'pengguna.id_departemen')
@@ -135,10 +117,6 @@ class RiwayatAbsensiAdminController extends Controller
                     'status_key' => strtolower((string)$label),
                 ];
             });
-
-        // =========================
-        // CUTI (disetujui): expand per hari
-        // =========================
         $cutiQuery = PengajuanCuti::join('pengguna', 'pengguna.id', '=', 'pengajuan_cuti.id_pengguna')
             ->leftJoin('departemen', 'departemen.id', '=', 'pengguna.id_departemen')
             ->where('pengajuan_cuti.status_pengajuan', 'disetujui')
@@ -190,9 +168,6 @@ class RiwayatAbsensiAdminController extends Controller
                 ]);
             }
         }
-
-        // Gabungkan absensi + cuti
-        // Jika ada absensi dan cuti di tanggal yang sama untuk orang yang sama, CUTI menang
         $merged = collect()
             ->concat($absensiRows)
             ->concat($cutiRows)
@@ -208,8 +183,6 @@ class RiwayatAbsensiAdminController extends Controller
                 return Carbon::createFromFormat('d F Y', $row['tanggal'])->format('Y-m-d');
             })
             ->values();
-
-        // Pagination manual
         $perPage = 10;
         $page = (int)$request->get('page', 1);
         if ($page < 1) $page = 1;
@@ -236,12 +209,9 @@ class RiwayatAbsensiAdminController extends Controller
             ],
         ]);
     }
-
     public function exportCsv(Request $request)
     {
         $this->ensureAdmin();
-
-        // Reuse index logic (ambil data tanpa pagination)
         $range = trim((string)$request->get('range', ''));
         $departemenId = $request->get('departemen', '');
         $q = trim((string)$request->get('q', ''));
@@ -351,8 +321,6 @@ class RiwayatAbsensiAdminController extends Controller
                 ]);
             }
         }
-
-        // merge cuti wins
         $merged = collect()
             ->concat($absensiRows)
             ->concat($cutiRows)

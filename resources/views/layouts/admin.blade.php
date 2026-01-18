@@ -10,15 +10,15 @@
             href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
         />
         <style>
-            @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
             body {
-                font-family: "Poppins", sans-serif;
+                font-family: 'Poppins', sans-serif;
             }
         </style>
     </head>
     <body class="bg-[#FAFAFA] text-gray-800 font-sans antialiased">
         <div class="flex min-h-screen">
-            {{-- SIDEBAR ADMIN (WHITE STYLE) --}}
+            {{-- SIDEBAR ADMIN --}}
             <aside
                 class="w-72 bg-white border-r border-gray-200 flex flex-col fixed h-full z-10"
             >
@@ -26,18 +26,17 @@
                 <div class="p-8 flex items-center gap-3">
                     <span
                         class="text-2xl font-bold text-gray-900 tracking-tight"
-                        >Hadirin</span
                     >
+                        Hadirin
+                    </span>
                 </div>
 
                 {{-- NAVIGATION --}}
                 <nav class="flex-1 px-6 space-y-2 mt-2">
                     {{-- MENU: RIWAYAT ABSENSI (AKTIF) --}}
-                    {{-- Logika: Jika route saat ini mengandung 'riwayat_absensi', maka aktif --}}
                     <a
                         href="{{ route('admin.riwayat_absensi') }}"
-                        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group
-               {{ request()->routeIs('admin.riwayat_absensi*') ? 'bg-indigo-100 text-indigo-600 shadow-sm' : 'text-gray-500 hover:bg-gray-50 hover:text-indigo-600' }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('admin.riwayat_absensi*') ? 'bg-indigo-100 text-indigo-600 shadow-sm' : 'text-gray-500 hover:bg-gray-50 hover:text-indigo-600' }}"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +58,7 @@
                     {{-- MENU: KARYAWAN --}}
                     <a
                         href="{{ route('admin.karyawan.index') }}"
-                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl group {{ request()->routeIs('admin.karyawan*') ? 'bg-indigo-100 text-indigo-600 shadow-sm' : 'text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200' }}"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -81,7 +80,7 @@
                     {{-- MENU: PENGAJUAN --}}
                     <a
                         href="{{ route('admin.pengajuan.index') }}"
-                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl group {{ request()->routeIs('admin.pengajuan*') ? 'bg-indigo-100 text-indigo-600 shadow-sm' : '  text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200' }}"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -102,8 +101,8 @@
 
                     {{-- MENU: PENGATURAN --}}
                     <a
-                        href="route('admin.pengaturan')"
-                        class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200"
+                        href="{{ route('admin.pengaturan.index') }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl group {{ request()->routeIs('admin.pengaturan*') ? 'bg-indigo-100 text-indigo-600 shadow-sm' : '  text-gray-500 hover:bg-gray-50 hover:text-indigo-600 transition-all duration-200' }}"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

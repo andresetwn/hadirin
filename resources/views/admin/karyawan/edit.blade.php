@@ -9,7 +9,7 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 relative">
     
     {{-- Header Button Kanan Atas --}}
-    <div class="absolute top-6 right-6 flex gap-2">
+    <div class="absolute top-2 right-6 flex gap-2">
         <a href="{{ route('admin.karyawan.index') }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-semibold text-sm">
             ← Kembali
         </a>
